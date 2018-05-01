@@ -6,7 +6,7 @@
  * Copyright (C) 2011 Steven Cogswell <steven.cogswell@gmail.com>
  *                    http://husks.wordpress.com
  * 
- * Version 20120522
+ * Version 20180116
  * 
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -81,7 +81,6 @@ void SerialCommand::setDefaultHandler(void (*function)(const char *)) {
   defaultHandler = function;
 }
 
-
 /**
  * This checks the Serial stream for characters, and assembles them into a buffer.
  * When the terminator character (default '\n') is seen, it starts parsing the
@@ -93,6 +92,30 @@ void SerialCommand::readSerial(Stream &stream) {
     #ifdef SERIALCOMMAND_DEBUG
       Serial.print(inChar);   // Echo back to serial stream
     #endif
+    if(inChar == '=' || inChar == '\'' || inChar == '"' ||inChar == ','){
+    /* mForce compatibility
+     * Drop characters to spaces to allow us to .next
+     * This should automatically normalize any Serial input to loosen the input restriction
+     */
+    inChar = ' ';
+  }
+  if(allUpper){
+    //Ben wanted this.
+    inChar = toupper(inChar);
+  }
+  #if defined(__AVR_ATmega32U4__)
+	if(pass && intOK){
+    if(enableReq){
+      digitalWrite(enTX,0);//active low enable
+      Serial1.print(inChar); //Serial1 is not valid on 328 chips.
+      delay(1);
+      digitalWrite(enTX,1);
+    }
+    else{
+      Serial1.print(inChar);
+    }
+	}
+  #endif
 
     if (inChar == term) {     // Check for the terminator (default '\r') meaning end of command
       #ifdef SERIALCOMMAND_DEBUG

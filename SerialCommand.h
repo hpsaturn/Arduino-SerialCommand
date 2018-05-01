@@ -5,8 +5,9 @@
  * Copyright (C) 2012 Stefan Rado
  * Copyright (C) 2011 Steven Cogswell <steven.cogswell@gmail.com>
  *                    http://husks.wordpress.com
- * 
- * Version 20120522
+ * Copyright (C) 2018 Michael Moskie <michael.moskie@gmail.com>
+ *
+ * Version 20180116
  * 
  * This library is free software: you can redistribute it and/or modify
  * it under the terms of the GNU Lesser General Public License as published by
@@ -52,7 +53,11 @@ class SerialCommand {
     void readSerial(Stream &stream = Serial);    // Main entry point.
     void clearBuffer();   // Clears the input buffer.
     char *next();         // Returns pointer to next token found in command buffer (for getting arguments to commands).
-
+	  bool pass = false; //Enables or disables passthrough.
+    bool intOK = true; //Allows use of interlocks to stop passthrough communication
+    bool enableReq = false; //Fasle enables straight passthrough, true requires enTX to be set.
+    bool allUpper = false; //Makes all incoming characters uppercase when true, ensure that all commands are uppercase when using this.
+    uint8_t enTX = 0; //Pin that enables transmit communication
   private:
     // Command/handler dictionary
     struct SerialCommandCallback {
@@ -71,7 +76,7 @@ class SerialCommand {
     char buffer[SERIALCOMMAND_BUFFER + 1]; // Buffer of stored characters while waiting for terminator character
     byte bufPos;                        // Current position in the buffer
     char *last;                         // State variable used by strtok_r during processing
-    char address;
+    char address;                       //The address that is used by addCommadnWithAddr()
 };
 
 #endif //SerialCommand_h
