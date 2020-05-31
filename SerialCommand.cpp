@@ -87,9 +87,9 @@ void SerialCommand::setDefaultHandler(void (*function)(const char *)) {
  * When the terminator character (default '\n') is seen, it starts parsing the
  * buffer for a prefix command, and calls handlers setup by addCommand() member
  */
-void SerialCommand::readSerial(Stream &stream) {
-  while (stream.available() > 0) {
-    char inChar = stream.read();   // Read single available character, there may be more waiting
+void SerialCommand::readSerial(BluetoothSerial &btSerial) {
+  while (btSerial.isReady()) {
+    char inChar = btSerial.read();   // Read single available character, there may be more waiting
     #ifdef SERIALCOMMAND_DEBUG
       Serial.print(inChar);   // Echo back to serial stream
     #endif

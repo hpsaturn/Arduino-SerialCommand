@@ -24,13 +24,7 @@
 #ifndef SerialCommand_h
 #define SerialCommand_h
 
-#if defined(WIRING) && WIRING >= 100
-  #include <Wiring.h>
-#elif defined(ARDUINO) && ARDUINO >= 100
-  #include <Arduino.h>
-#else
-  #include <WProgram.h>
-#endif
+#include <BluetoothSerial.h>
 #include <string.h>
 
 // Size of the input buffer in bytes (maximum length of one command plus arguments)
@@ -49,7 +43,7 @@ class SerialCommand {
     void addCommandWithAddr(const char *command, void(*function)());//Add a command to the processing dictionary with address.
     void setDefaultHandler(void (*function)(const char *));   // A handler to call when no valid command received.
     void setAddress(char addin);
-    void readSerial(Stream &stream = Serial);    // Main entry point.
+    void readSerial(BluetoothSerial &btSerial);    // Main entry point.
     void clearBuffer();   // Clears the input buffer.
     char *next();         // Returns pointer to next token found in command buffer (for getting arguments to commands).
 
