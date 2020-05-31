@@ -3,6 +3,7 @@
 // May 2011
 
 #include <SerialCommand.h>
+#include <BluetoothSerial.h>
 
 #define arduinoLED 13   // Arduino LED on board
 
@@ -22,13 +23,15 @@ void setup() {
   sCmd.setAddress('A');                      // Sets the address for any calls to addCommandWithAddr()
   sCmd.addCommandWithAddr("GOODBYE", sayGoodbye); //Adds the command "AGOODBYE" to the list of available commands
   sCmd.setDefaultHandler(unrecognized);      // Handler for command that isn't matched  (says "What?")
+
+  btSerial.begin("BTDeviceName");
+  Serial.println("BT Serial ready");
   Serial.println("Ready");
 }
 
 void loop() {
-  sCmd.readSerial();     // We don't do much, just process serial commands
+  SCmd.readSerial(btSerial);  // We don't do much, just process serial commands
 }
-
 
 void LED_on() {
   Serial.println("LED on");
