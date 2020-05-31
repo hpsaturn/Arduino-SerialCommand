@@ -81,7 +81,6 @@ void SerialCommand::setDefaultHandler(void (*function)(const char *)) {
   defaultHandler = function;
 }
 
-
 /**
  * This checks the Serial stream for characters, and assembles them into a buffer.
  * When the terminator character (default '\n') is seen, it starts parsing the
