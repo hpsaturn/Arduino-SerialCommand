@@ -87,7 +87,7 @@ void SerialCommand::setDefaultHandler(void (*function)(const char *)) {
  * buffer for a prefix command, and calls handlers setup by addCommand() member
  */
 void SerialCommand::readSerial(BluetoothSerial &btSerial) {
-  while (btSerial.isReady()) {
+  while (btSerial.available()>0) {
     char inChar = btSerial.read();   // Read single available character, there may be more waiting
     #ifdef SERIALCOMMAND_DEBUG
       Serial.print(inChar);   // Echo back to serial stream
